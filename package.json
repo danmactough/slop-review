@@ -14,6 +14,9 @@
   },
   "license": "MIT",
   "scripts": {
+    "preversion": "echo \"You must use 'npm version prerelease --preid fork' to bump the version. Continue? (y/n)\" && read answer && [[ $answer == [Yy]* ]] || exit 1",
+    "version:manifests": "node scripts/version-manifests.mjs",
+    "version": "npm run version:manifests $npm_new_version && npm version --prefix plugin $npm_new_version && git add -A .agents/plugins/marketplace.json .claude-plugin/marketplace.json plugin/.codex-plugin/plugin.json plugin/.claude-plugin/plugin.json plugin/package.json plugin/package-lock.json package-lock.json",
     "test": "npm run test --prefix plugin"
   },
   "pi": {

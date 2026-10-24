@@ -39,7 +39,8 @@
   },
   "scripts": {
     "install-command": "node scripts/install-command.js",
-    "test": "node --test test/*.test.js"
+    "test": "node --test test/*.test.js",
+    "version": "npm install --package-lock-only --no-audit --no-fund"
   },
   "dependencies": {
     "glimpseui": "^0.8.1"
