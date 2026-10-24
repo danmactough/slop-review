@@ -3,11 +3,11 @@
   "version": "0.6.1",
   "description": "Native, Monaco-powered diff review window for AI coding agents. Browse changes since the merge-base with your base branch (or last commit / uncommitted), leave inline + file-level + overall comments on the slop, and have the agent address each item. Originally built for Claude Code; works in Codex CLI via the bundled `slop-review` skill.",
   "author": {
-    "name": "Dan Bachelder",
-    "url": "https://github.com/dbachelder"
+    "name": "Dan MacTough",
+    "url": "https://github.com/danmactough"
   },
-  "homepage": "https://github.com/dbachelder/slop-review",
-  "repository": "https://github.com/dbachelder/slop-review",
+  "homepage": "https://github.com/danmactough/slop-review",
+  "repository": "https://github.com/danmactough/slop-review",
   "license": "MIT",
   "keywords": [
     "diff",
@@ -22,14 +22,14 @@
     "displayName": "Slop Review",
     "shortDescription": "Native diff review window with inline comments",
     "longDescription": "Adds a `slop-review` skill that opens a native, Monaco-powered diff window. Defaults to a PR-style review of all changes since the merge-base with the auto-detected base branch, with last-commit / uncommitted / all-files modes also available. Comments are written to a temp file the agent then reads back, addressing each item.",
-    "developerName": "Dan Bachelder",
+    "developerName": "Dan MacTough",
     "category": "Engineering",
     "capabilities": [
       "Interactive",
       "Read",
       "Write"
     ],
-    "websiteURL": "https://github.com/dbachelder/slop-review",
+    "websiteURL": "https://github.com/danmactough/slop-review",
     "defaultPrompt": [
       "Review my changes against main",
       "@slop-review last-commit"

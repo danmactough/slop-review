@@ -4,7 +4,7 @@
   "description": "Single-plugin marketplace exposing slop-review as a plugin for Claude Code and Codex CLI.",
   "owner": {
     "name": "Dan Bachelder",
-    "url": "https://github.com/dbachelder"
+    "url": "https://github.com/danmactough"
   },
   "interface": {
     "displayName": "Slop Review"
@@ -16,7 +16,7 @@
       "version": "0.6.1",
       "license": "MIT",
       "category": "Engineering",
-      "homepage": "https://github.com/dbachelder/slop-review",
+      "homepage": "https://github.com/danmactough/slop-review",
       "keywords": [
         "diff",
         "review",

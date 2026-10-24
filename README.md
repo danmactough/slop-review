@@ -29,10 +29,10 @@ Three hosts, three install paths. All three end with the same review window.
 pi install npm:pi-slop-review
 
 # Or from GitHub (handy for unreleased commits)
-pi install git:github.com/dbachelder/slop-review
+pi install git:github.com/danmactough/slop-review
 
 # Or pin to a tag
-pi install git:github.com/dbachelder/slop-review@v0.5.0
+pi install git:github.com/danmactough/slop-review@v0.5.0
 
 # Or try without installing (single-run)
 pi -e npm:pi-slop-review
@@ -58,7 +58,7 @@ When you submit feedback, the composed prompt drops into pi's input editor
 
 ```bash
 # inside Claude Code
-/plugin marketplace add dbachelder/slop-review
+/plugin marketplace add danmactough/slop-review
 /plugin install slop-review@slop-review
 ```
 
@@ -71,7 +71,7 @@ Both steps are required:
 
 ```bash
 # 1. Register the marketplace
-codex plugin marketplace add dbachelder/slop-review
+codex plugin marketplace add danmactough/slop-review
 ```
 
 ```
@@ -103,8 +103,8 @@ Then restart Codex.
 | Host | Install source | Update command |
 |---|---|---|
 | pi | npm (`pi-slop-review`) or GitHub clone | `pi update` |
-| Claude Code | GitHub marketplace (`dbachelder/slop-review`) | `/plugin update` |
-| Codex CLI | GitHub marketplace (`dbachelder/slop-review`) | `codex plugin marketplace upgrade slop-review` |
+| Claude Code | GitHub marketplace (`danmactough/slop-review`) | `/plugin update` |
+| Codex CLI | GitHub marketplace (`danmactough/slop-review`) | `codex plugin marketplace upgrade slop-review` |
 
 For Claude Code and Codex, the GitHub marketplace clone runs a one-time
 `npm install` inside the plugin checkout on first invocation — that's what
@@ -118,7 +118,7 @@ changed.
 ### Standalone CLI / development install
 
 ```bash
-git clone https://github.com/dbachelder/slop-review.git
+git clone https://github.com/danmactough/slop-review.git
 cd slop-review/plugin
 npm install
 npm install -g .                # puts `slop-review` on PATH as a standalone binary

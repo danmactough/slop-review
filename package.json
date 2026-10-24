@@ -1,17 +1,20 @@
 {
   "name": "slop-review",
   "version": "0.6.2",
-  "description": "Root manifest for pi (`pi install git:github.com/dbachelder/slop-review`). Points pi at the extension that lives under ./plugin/. Claude Code and Codex CLI ignore this file and read ./plugin/package.json instead.",
+  "description": "Root manifest for pi (`pi install git:github.com/danmactough/slop-review`). Points pi at the extension that lives under ./plugin/. Claude Code and Codex CLI ignore this file and read ./plugin/package.json instead.",
   "private": true,
+  "workspaces": [
+    "plugin"
+  ],
   "type": "module",
-  "homepage": "https://github.com/dbachelder/slop-review",
+  "homepage": "https://github.com/danmactough/slop-review",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dbachelder/slop-review.git"
+    "url": "git+https://github.com/danmactough/slop-review.git"
   },
   "license": "MIT",
   "scripts": {
-    "test": "node --test plugin/test/*.test.js"
+    "test": "npm run test --prefix plugin"
   },
   "pi": {
     "extensions": [
