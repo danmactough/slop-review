@@ -24,17 +24,6 @@
       "./plugin/extensions/pi/index.ts"
     ]
   },
-  "dependencies": {
-    "glimpseui": "^0.8.1"
-  },
-  "peerDependencies": {
-    "@earendil-works/pi-coding-agent": "*"
-  },
-  "peerDependenciesMeta": {
-    "@earendil-works/pi-coding-agent": {
-      "optional": true
-    }
-  },
   "engines": {
     "node": ">=20"
   }
