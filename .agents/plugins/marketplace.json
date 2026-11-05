@@ -7,7 +7,7 @@
     {
       "name": "slop-review",
       "description": "Native diff review window (Monaco + Glimpse) for AI coding agents. Adds a `slop-review` skill for Codex CLI (`$slop-review`) and Claude Code (`/slop-review:slop-review`), and a pi extension exposing a `/slop-review` command.",
-      "version": "0.6.3-fork.1",
+      "version": "0.6.3-fork.2",
       "license": "MIT",
       "category": "Engineering",
       "homepage": "https://github.com/danmactough/slop-review",
