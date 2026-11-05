@@ -66,7 +66,7 @@ if [[ "$needs_install" == "1" ]]; then
     exit 1
   fi
   echo "slop-review: installing plugin dependencies (first run)..." >&2
-  (cd "$ROOT" && npm install --omit=dev --no-audit --no-fund) >&2
+  (cd "$ROOT" && npm install --workspaces=false --omit=dev --no-audit --no-fund) >&2
   touch "$STAMP"
 fi
 
