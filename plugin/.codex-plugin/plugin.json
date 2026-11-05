@@ -31,8 +31,8 @@
     ],
     "websiteURL": "https://github.com/danmactough/slop-review",
     "defaultPrompt": [
-      "Review my changes against main",
-      "@slop-review last-commit"
+      "$slop-review --base main",
+      "$slop-review last-commit"
     ]
   }
 }

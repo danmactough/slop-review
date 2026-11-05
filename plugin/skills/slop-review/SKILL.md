@@ -1,48 +1,38 @@
 ---
 name: slop-review
-description: Open the native, Monaco-powered diff review window so the user can leave inline / file-level / overall comments on current changes or a selected recent commit, then address each comment. Use this when the user asks to "review my changes", "review the slop", "review my diff", "open a diff review", "open the review window", "get feedback on my work", "do a PR-style review", "review a specific commit", "show me what I changed and let me comment", or types `@slop-review` explicitly. Defaults to a PR-style review of all commits + uncommitted changes since the merge-base with the auto-detected base branch (origin/HEAD → origin/main → main → origin/master → master); the window also lets users select one of the 50 most recent commits.
+description: Open the native diff review window so the user can leave comments on current changes or a selected recent commit, then address each comment.
+argument-hint: "[base|last-commit|uncommitted|all] [--base <ref>]"
+disable-model-invocation: true
 ---
 
 # slop-review
 
 Open the native diff review window, wait for the user to submit feedback, then address each comment they wrote.
 
-## When to use
-
-- User asks for a "review", "diff review", "PR review", "slop review", or "feedback on my changes"
-- User says they want to "look at" or "comment on" their current changes before continuing
-- User explicitly invokes `@slop-review`
-
-If the user has not made any changes yet, say so and skip this skill.
-
 ## Step 1 — invoke the dispatcher via the shell tool
 
-The plugin ships a self-contained dispatcher script. Invoke it via your shell tool with this exact command (substituting the user's intent for `<args>`):
+The plugin ships a self-contained dispatcher script. Invoke it via your shell tool with this exact command:
 
 ```bash
 if [ -n "${CLAUDE_PLUGIN_ROOT}" ] && [ -x "${CLAUDE_PLUGIN_ROOT}/bin/plugin-run.sh" ]; then
-	bash "${CLAUDE_PLUGIN_ROOT}/bin/plugin-run.sh" <args>
+  bash "${CLAUDE_PLUGIN_ROOT}/bin/plugin-run.sh" $ARGUMENTS
 elif [ -n "${CODEX_PLUGIN_ROOT:-}" ] && [ -x "${CODEX_PLUGIN_ROOT}/bin/plugin-run.sh" ]; then
-	bash "${CODEX_PLUGIN_ROOT}/bin/plugin-run.sh" <args>
+  bash "${CODEX_PLUGIN_ROOT}/bin/plugin-run.sh" $ARGUMENTS
 elif command -v slop-review >/dev/null 2>&1; then
-	slop-review <args>
+  slop-review $ARGUMENTS
 else
-	echo "slop-review is not available. Install the plugin via your agent's plugin/marketplace command, or run: npm install -g slop-review" >&2
-	exit 1
+  echo "slop-review is not available. Install the plugin via your agent's plugin/marketplace command, or run: npm install -g slop-review" >&2
+  exit 1
 fi
 ```
 
-Agent plugin hosts expose the plugin checkout through an environment variable such as `${CLAUDE_PLUGIN_ROOT}` or `${CODEX_PLUGIN_ROOT}`. The shell block above checks both names, then falls back to a globally installed `slop-review` binary. On first invocation the dispatcher does a one-time `npm install` inside the plugin checkout to pull `glimpseui` and build its native helper, then exec's the CLI.
+Some hosts fill in the arguments before you see this block, and others don't. If the block still contains an unfilled arguments placeholder, replace it with the text the user typed after the skill name, or remove it if they typed nothing. Never run the block with the placeholder unfilled, because the shell would expand it to nothing and silently open the default scope. Valid first arguments:
 
-`<args>` is one of:
-
-| User intent | Pass |
-|---|---|
-| Default / "review my changes" / "PR-style review" | *(no args)* |
-| "review my last commit" | `last-commit` |
-| "review only what's uncommitted" / "review my working tree" | `uncommitted` |
-| Override the auto-detected base branch | `--base <ref>` |
-| Just browse the working tree (debug) | `all` |
+- *(none)* — default `base` scope: all changes since the merge-base with the auto-detected base branch (`origin/HEAD` → `origin/main` → `main` → `origin/master` → `master`).
+- `last-commit` — `HEAD^ → HEAD`.
+- `uncommitted` — working-tree changes vs `HEAD`.
+- `all` — debug / browse-only.
+- `--base <ref>` — override the auto-detected base branch (only meaningful with `base`).
 
 A native window will open. The user can open **Commits** and select one of the 50 most recent commits without changing the dispatcher arguments. **The shell call will block until the user clicks Submit feedback or closes the window — this can take minutes. Do not run other tool calls in parallel; just wait.**
 

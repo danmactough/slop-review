@@ -2,8 +2,8 @@
 
 A native diff review window for terminal coding agents, powered by [Glimpse](https://github.com/hazat/glimpse) and [Monaco](https://microsoft.github.io/monaco-editor/). Ships for **[Claude Code](https://docs.anthropic.com/en/docs/claude-code)**, **[Codex CLI](https://github.com/openai/codex)**, and **[pi](https://pi.dev)** — review the slop before you ship it.
 
-- In **Claude Code** it adds a `/slop-review` slash command.
-- In **Codex CLI** it ships as a `slop-review` skill (auto-invoked when you ask for a review, or explicitly via `@slop-review`).
+- In **Claude Code** it ships as a `slop-review` skill, invoked with `/slop-review:slop-review`.
+- In **Codex CLI** it ships as the same skill, invoked with `$slop-review`.
 - In **pi** it registers a `/slop-review` slash command (the upstream this is forked from — see Credit below).
 
 All three:
@@ -62,7 +62,9 @@ When you submit feedback, the composed prompt drops into pi's input editor
 /plugin install slop-review@slop-review
 ```
 
-This registers the `/slop-review` slash command.
+This registers the `slop-review` skill, which you invoke with `/slop-review:slop-review`.
+The review window only opens when you invoke it; Claude never opens it on its
+own.
 
 ### Codex CLI
 
@@ -81,12 +83,11 @@ codex plugin marketplace add danmactough/slop-review
 
 In the plugin browser, switch to the `Slop Review` (slop-review) marketplace
 tab, select the `slop-review` plugin, and press *Install plugin*. This enables
-the `slop-review` skill, which the model auto-loads when you ask it to review
-your changes (or which you can invoke explicitly with `@slop-review`).
+the `slop-review` skill, which you invoke with `$slop-review`. The review
+window only opens when you invoke it; Codex never opens it on its own.
 
-> **Why a skill instead of a slash command in Codex?** Codex's plugin system
-> doesn't expose user-defined slash commands; it uses *skills* (markdown the
-> model loads when descriptions match the user's intent) and `@`-invocation.
+> **Why `$` instead of `/` in Codex?** Codex's plugin system doesn't expose
+> user-defined slash commands. It uses *skills*, which you mention with `$`.
 
 If you prefer to skip the TUI, enable the plugin by editing
 `~/.codex/config.toml`:
@@ -115,6 +116,10 @@ special-casing. A stamp file under `plugin/node_modules/` makes the
 dispatcher skip `npm install` unless `plugin/package.json` actually
 changed.
 
+If you previously ran `npm run install-command`, delete the old copy of the
+command so it can't take the place of the skill:
+`rm ~/.claude/commands/slop-review.md`.
+
 ### Standalone CLI / development install
 
 ```bash
@@ -122,7 +127,6 @@ git clone https://github.com/danmactough/slop-review.git
 cd slop-review/plugin
 npm install
 npm install -g .                # puts `slop-review` on PATH as a standalone binary
-npm run install-command         # copies commands/slop-review.md → ~/.claude/commands/
 ```
 
 All the plugin contents live under `slop-review/plugin/`. The top-level
@@ -135,7 +139,7 @@ the extension under `./plugin/`), and `README` / `LICENSE` / `NOTICE`.
 This is a fork of **[badlogic/pi-diff-review](https://github.com/badlogic/pi-diff-review)** by [Mario Zechner](https://github.com/badlogic), which provides the same UI for [`pi`](https://pi.dev). All of the heavy lifting — the Glimpse window orchestration, the Monaco-based review UI, the comment-and-prompt pipeline, and the in-terminal Escape-to-cancel waiting overlay (in our pi adapter) — was designed and implemented there. This repo:
 
 - Adds a standalone Node CLI (`plugin/bin/slop-review.js`) so the same UI can be driven from any host that can shell out.
-- Adds Claude Code (slash command) and Codex CLI (skill) adapters that use a temp-file + `Read` round-trip so the review stays visible in the chat UI.
+- Adds a skill shared by Claude Code and Codex CLI that uses a temp-file + `Read` round-trip so the review stays visible in the chat UI.
 - Adds a pi extension under `plugin/extensions/pi/` that registers `/slop-review` in pi (parallel to the upstream's `/diff-review`) and uses upstream's idiomatic `setEditorText` flow — same UX as the upstream.
 - Adds PR-style review (everything since merge-base with the auto-detected base branch) as the default scope, with explicit `last-commit`, `uncommitted`, and `all` modes also available.
 - Keeps `plugin/web/index.html` and `plugin/web/app.js` from the upstream essentially unchanged.
@@ -170,13 +174,13 @@ Glimpse supports Windows, but the native host build during install requires:
 ### From Claude Code
 
 ```
-/slop-review                       # default: all changes since base branch merge-base
-/slop-review last-commit           # only HEAD vs HEAD^
-/slop-review uncommitted           # only working-tree changes vs HEAD
-/slop-review --base origin/develop # override the base branch
+/slop-review:slop-review                       # default: all changes since base branch merge-base
+/slop-review:slop-review last-commit           # only HEAD vs HEAD^
+/slop-review:slop-review uncommitted           # only working-tree changes vs HEAD
+/slop-review:slop-review --base origin/develop # override the base branch
 ```
 
-The slash command declares an `argument-hint`, so Claude Code's input autocompletes the available forms.
+The skill declares an `argument-hint`, so Claude Code's input autocompletes the available forms.
 
 ### From pi
 
@@ -196,20 +200,10 @@ pi terminal to cancel.
 
 ### From Codex CLI
 
-Just ask for a review in natural language and the `slop-review` skill auto-loads:
-
 ```
-> review my changes
-> review the slop on this branch against main
-> open a PR-style review
-```
-
-Or invoke it explicitly:
-
-```
-> @slop-review
-> @slop-review last-commit
-> @slop-review --base origin/develop
+> $slop-review
+> $slop-review last-commit
+> $slop-review --base origin/develop
 ```
 
 ### What happens
@@ -260,8 +254,8 @@ Every mode also exposes a **Commits** tab. Its dropdown lists the 50 most recent
 
 ```
   Agent                     bash plugin-run.sh                slop-review
-  /slop-review        ───────────────────────────────────►    (Node CLI)
-  @slop-review                                                     │
+  /slop-review:slop-review ──────────────────────────────►    (Node CLI)
+  $slop-review                                                     │
                                                                    │ glimpseui
                                                                    ▼
                           "FEEDBACK_FILE: <path>"             Native window
@@ -283,8 +277,7 @@ with the full file contents.
 - **`plugin/src/prompt.js`** — Feedback prompt composer (ported verbatim from `src/prompt.ts`).
 - **`plugin/src/ui.js`** — Inlines `web/index.html` + `web/app.js` for the Glimpse window.
 - **`plugin/web/`** — Static UI assets (Monaco, Tailwind via CDN, app logic). Copied from upstream.
-- **`plugin/commands/slop-review.md`** — Claude Code slash command. Forwards `$ARGUMENTS` to the dispatcher, then instructs Claude to `Read` the feedback file and address each item.
-- **`plugin/skills/slop-review/SKILL.md`** — Codex skill. Same instructions, formatted as a skill that the model auto-loads when the user asks for a review.
+- **`plugin/skills/slop-review/SKILL.md`** — Forwards `$ARGUMENTS` to the dispatcher, then instructs agent to `Read` the feedback file and address each item.
 
 ## Layout
 
@@ -320,17 +313,15 @@ slop-review/
 │   ├── web/                      # Monaco UI bundle (mostly unchanged from upstream)
 │   │   ├── index.html
 │   │   └── app.js
-│   ├── commands/
-│   │   └── slop-review.md        # Claude Code slash command
 │   ├── skills/
 │   │   └── slop-review/
-│   │       └── SKILL.md          # Codex skill (auto-loaded; @-invokable)
+│   │       ├── SKILL.md          # The core skill
+│   │       └── agents/
+│   │           └── openai.yaml   # Turns off automatic invocation in Codex
 │   ├── extensions/
 │   │   └── pi/
 │   │       ├── index.ts          # pi extension entry (registers /slop-review)
 │   │       └── types.ts          # wire-format types for the Glimpse ↔ host channel
-│   ├── scripts/
-│   │   └── install-command.js
 │   └── package.json              # name: pi-slop-review; bin: slop-review;
 │                                  # pi.extensions: extensions/pi/index.ts
 ├── LICENSE

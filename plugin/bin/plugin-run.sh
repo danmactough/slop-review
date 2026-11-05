@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # slop-review — plugin entrypoint.
 #
-# Invoked by commands/slop-review.md (Claude Code) and skills/slop-review/SKILL.md
-# (Codex CLI) when the plugin is installed via the agent's plugin system.
+# Invoked by skills/slop-review/SKILL.md when the plugin is installed via
+# the agent's plugin system.
 # Runs slop-review directly out of the plugin's git checkout, doing a one-time
 # `npm install` on first use (which would normally also build glimpseui's
 # per-platform native helper via its postinstall hook).
@@ -130,7 +130,7 @@ if [[ -n "$HOST_BIN" && -d "$GLIMPSEUI_DIR" && ! -x "$HOST_BIN" ]]; then
     fi
     echo "slop-review: after fixing the build prerequisites, you can retry by running:" >&2
     echo "  (cd '$GLIMPSEUI_DIR' && npm run $BUILD_TARGET)" >&2
-    echo "  …or just re-run /slop-review and this script will retry the build." >&2
+    echo "  …or just re-run the review and this script will retry the build." >&2
     exit 1
   fi
 fi

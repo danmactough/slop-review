@@ -12,7 +12,7 @@
   "plugins": [
     {
       "name": "slop-review",
-      "description": "Native diff review window (Monaco + Glimpse) for AI coding agents. Adds the /slop-review slash command in Claude Code, a `slop-review` skill in Codex CLI, and a pi extension exposing the same `/slop-review` command.",
+      "description": "Native diff review window (Monaco + Glimpse) for AI coding agents. Adds a `slop-review` skill for Claude Code (`/slop-review:slop-review`) and Codex CLI (`$slop-review`), and a pi extension exposing a `/slop-review` command.",
       "version": "0.6.3-fork.1",
       "license": "MIT",
       "category": "Engineering",

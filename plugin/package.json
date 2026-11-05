@@ -27,10 +27,8 @@
     "bin",
     "src",
     "web",
-    "commands",
     "skills",
     "extensions",
-    "scripts",
     ".claude-plugin",
     ".codex-plugin"
   ],
@@ -38,7 +36,6 @@
     "node": ">=20"
   },
   "scripts": {
-    "install-command": "node scripts/install-command.js",
     "test": "node --test test/*.test.js",
     "version": "npm install --package-lock-only --no-audit --no-fund"
   },
