@@ -12,7 +12,7 @@ Open the native diff review window so the user can leave inline / file-level / o
 Invoke this exact shell command using your shell/bash tool. The window will block until the user clicks **Submit feedback** or closes it, so this call may take a long time — that is expected. Do **not** run anything else in parallel; wait for it to finish.
 
 ```bash
-if [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -x "${CLAUDE_PLUGIN_ROOT}/bin/plugin-run.sh" ]; then
+if [ -n "${CLAUDE_PLUGIN_ROOT}" ] && [ -x "${CLAUDE_PLUGIN_ROOT}/bin/plugin-run.sh" ]; then
   bash "${CLAUDE_PLUGIN_ROOT}/bin/plugin-run.sh" $ARGUMENTS
 elif [ -n "${CODEX_PLUGIN_ROOT:-}" ] && [ -x "${CODEX_PLUGIN_ROOT}/bin/plugin-run.sh" ]; then
   bash "${CODEX_PLUGIN_ROOT}/bin/plugin-run.sh" $ARGUMENTS

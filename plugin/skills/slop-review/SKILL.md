@@ -20,7 +20,7 @@ If the user has not made any changes yet, say so and skip this skill.
 The plugin ships a self-contained dispatcher script. Invoke it via your shell tool with this exact command (substituting the user's intent for `<args>`):
 
 ```bash
-if [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -x "${CLAUDE_PLUGIN_ROOT}/bin/plugin-run.sh" ]; then
+if [ -n "${CLAUDE_PLUGIN_ROOT}" ] && [ -x "${CLAUDE_PLUGIN_ROOT}/bin/plugin-run.sh" ]; then
 	bash "${CLAUDE_PLUGIN_ROOT}/bin/plugin-run.sh" <args>
 elif [ -n "${CODEX_PLUGIN_ROOT:-}" ] && [ -x "${CODEX_PLUGIN_ROOT}/bin/plugin-run.sh" ]; then
 	bash "${CODEX_PLUGIN_ROOT}/bin/plugin-run.sh" <args>
